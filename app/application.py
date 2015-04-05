@@ -38,13 +38,13 @@ def crc(name):
 
 hashdict = generate_hashes()
 
-@app.route('/')
+@application.route('/')
 def hello_world():
     table, player_name = pick_a_year()
     pnum = crc(player_name)
     return render_template("index.html", headers = HEADERS, table=table, pnum=pnum)
 
-@app.route('/submit', methods=['GET'])
+@application.route('/submit', methods=['GET'])
 def submit():
     player = request.args.get('player_name');
     pnum = request.args.get('p_num');
@@ -57,20 +57,20 @@ def submit():
     else:
         return jsonify(successCode = '0')
 
-@app.route('/giveup', methods=['GET'])
+@application.route('/giveup', methods=['GET'])
 def giveup():
     pnum = request.args.get('p_num');
     old_player_name = hashdict[pnum]
     table, player_name = pick_a_year()
     return jsonify(pnum = crc(player_name), player_name = old_player_name, stats = render_template("table.html", headers = HEADERS, table=table))
 
-@app.route('/shutdown', methods=['POST'])
+@application.route('/shutdown', methods=['POST'])
 def shutdown():
     shutdown_server()
     return 'Server shutting down...'
 
 if __name__ == '__main__':
-    app.run(host = '0.0.0.0')
+    application.run()#host = '0.0.0.0')
 
 
 #print(json.dumps(player_json, sort_keys=True, indent=4, separators=(',', ': ')))
