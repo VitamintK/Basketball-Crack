@@ -1,0 +1,14 @@
+[global]
+ApplicationName=Basketball-Crack
+AwsCredentialFile=C:\Users\kevin\.elasticbeanstalk\aws_credential_file
+DevToolsEndpoint=git.elasticbeanstalk.us-west-1.amazonaws.com
+EnvironmentName=basketball-env
+EnvironmentTier=WebServer::Standard::1.0
+EnvironmentType=LoadBalanced
+InstanceProfileName=aws-elasticbeanstalk-ec2-role
+OptionSettingFile=C:\Users\kevin\Documents\GitHub\Basketball-Crack\.elasticbeanstalk\optionsettings.basketball-env
+RdsEnabled=No
+Region=us-west-1
+ServiceEndpoint=https://elasticbeanstalk.us-west-1.amazonaws.com
+SolutionStack=64bit Amazon Linux running Python
+
