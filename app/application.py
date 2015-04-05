@@ -70,7 +70,7 @@ def shutdown():
     return 'Server shutting down...'
 
 if __name__ == '__main__':
-    app.run()#host = '0.0.0.0')
+    app.run(host = '0.0.0.0')
 
 
 #print(json.dumps(player_json, sort_keys=True, indent=4, separators=(',', ': ')))
