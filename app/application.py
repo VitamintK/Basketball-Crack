@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 HEADERS = ["Season", "Age", "Tm", "Lg", "Pos", "G", "GS", "MP", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS"]
 
-players = os.listdir("json/")
+players = os.listdir("super_json/")
 
 def generate_hashes():
     hashdict = dict()
@@ -70,7 +70,7 @@ def shutdown():
     return 'Server shutting down...'
 
 if __name__ == '__main__':
-    app.run(debug = True)#host = '0.0.0.0')
+    app.run()#host = '0.0.0.0')
 
 
 #print(json.dumps(player_json, sort_keys=True, indent=4, separators=(',', ': ')))
