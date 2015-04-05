@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Basketball Crack</title>
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+	<script type="text/javascript" src="static/js.js"></script>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/style.css" type="text/css" media="all">
+	<script> var pnum = {{pnum}}</script>
+</head>
+<body>
+	<h1> NAME THAT NBA PLAYER </h1>
+	<div id="container">
+		<table id = "stattable" class="table table-striped table-bordered table-condensed">
+			<tr>
+			{% for h in headers%}
+				<th> {{h}} </th>
+			{% endfor %}
+			</tr>
+			{% for t in table %}
+			    <tr>
+			    {% for i in t %}
+			        <td>{{ i }}</td>
+			    {% endfor %}
+			    </tr>
+			{% endfor %}
+		</table>
+
+	</div>
+	<div id="resMessage"><h1></h1></div>
+	<br>
+		<div id = "input_stuff" class="form-inline">
+	  			<input type="text" id="player" name="player_name" autofocus class="form-control" placeholder="NBA player name">
+	 			<button id="go_btn" class="btn btn-primary btn-large">GO</button>
+	 		<br><br>
+	 		<button id="give_btn" class="btn btn-default">give up</button>
+ 		</div>
+</body>
+</html>

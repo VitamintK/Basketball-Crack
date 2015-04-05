@@ -1,0 +1,36 @@
+body{
+	font-family: Helvetica, Arial, sans-serif;
+	text-align: center;
+}
+#container{
+	font-size: 1.2em;
+	height: 20em;
+	margin-left: 2em;
+	margin-right: 2em;
+}
+#stattable{
+	border: 1px solid #AAA;
+	border-collapse: collapse;
+	font-size:95%;
+	margin-right: auto;
+	margin-left: auto;
+	margin-top: auto;
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
+}
+#stattable td, th{
+	border: 1px solid #AAA;
+	text-align: center;
+	padding: 3px;
+}
+#input_stuff{
+	margin-left: 3em;
+	margin-right: 3em;
+}
+
+#resMessage{
+	height:5.5em;
+	margin-left: 2em;
+	margin-right: 2em;
+}
