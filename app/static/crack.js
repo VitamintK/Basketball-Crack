@@ -39,9 +39,6 @@ var prep_buttons = function(){
 				if(data.successCode == 1){
 					replace_table(data.stats);
 					pnum = data.pnum;
-					$('#player').val('');
-				} else {
-					$('#player').select();
 				}
 				console.log(data);
 			},
@@ -70,11 +67,6 @@ var prep_buttons = function(){
 			$('#go_btn').click();
 			return false;
 		}
-	});
-
-	$('#player').autocomplete({
-		position:{my: "left bottom", at: "left top", collision: "flip"},
-		source: names
 	});
 }
 

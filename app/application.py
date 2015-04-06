@@ -33,6 +33,20 @@ def pick_a_year():
             rows.append(row)
     return [random.choice(rows)], player_name
 
+def pick_all_years():
+    player = random.choice(players)
+    player_name = player[:-5]
+    with open('super_json/{}'.format(player)) as pjson:
+        player_json = json.load(pjson)
+    rows = []
+    for row in player_json['per_game'][1:]:
+        if row[0] == 'Career':
+            break
+        else:
+            rows.append(row)
+    rows = [row[5:] for row in rows]
+    return rows, player_name
+
 def crc(name):
     return zlib.crc32(bytes(name.lower(), 'UTF-8'))
 
@@ -42,7 +56,7 @@ hashdict = generate_hashes()
 def hello_world():
     table, player_name = pick_a_year()
     pnum = crc(player_name)
-    return render_template("index.html", headers = HEADERS, table=table, pnum=pnum)
+    return render_template("index.html", headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players])
 
 @app.route('/submit', methods=['GET'])
 def submit():
@@ -63,6 +77,12 @@ def giveup():
     old_player_name = hashdict[pnum]
     table, player_name = pick_a_year()
     return jsonify(pnum = crc(player_name), player_name = old_player_name, stats = render_template("table.html", headers = HEADERS, table=table))
+
+@app.route('/crack')
+def crack():
+    table, player_name = pick_all_years()
+    pnum = crc(player_name)
+    return render_template("index.html", headers = HEADERS[5:], table=table, pnum=pnum)
 
 @app.route('/shutdown', methods=['POST'])
 def shutdown():
