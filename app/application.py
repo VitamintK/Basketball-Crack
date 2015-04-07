@@ -4,6 +4,7 @@ import json
 import random
 import zlib
 import os
+from datetime import date
 
 json_dir = 'json/'
 
@@ -55,6 +56,28 @@ def pick_this_year():
 
 def crc(name):
     return zlib.crc32(bytes(name.lower(), 'UTF-8'))
+
+def find_first_year(player):
+    try:
+        with open('{}{}.json'.format(json_dir, player)) as pjson:
+            player_json = json.load(pjson)
+    except:
+        return None
+    return player_json['totals'][1]
+
+def find_this_year(player):
+    current_year = date.today().year - 1
+    current_season = str(current_year) + '-' + str(current_year%1000 + 1)
+    print(current_season)
+    print('hit')
+    try:
+        with open('{}{}.json'.format(json_dir, player)) as pjson:
+            player_json = json.load(pjson)
+    except:
+        return None
+    for row in player_json['totals'][1:]:
+        if row[0] == current_season:
+            return row
 
 def find_best_year(player):
     try:
@@ -124,18 +147,28 @@ def draft():
 def sub_draft():
     lnames = json.loads(request.args.get('playerl'))
     rnames = json.loads(request.args.get('playerr'))
+    mode = request.args.get('mode')
+    if mode=='best':
+        selector = find_best_year
+    elif mode == 'rookie':
+        selector = find_first_year
+    elif mode == 'recent':
+        selector = find_this_year
+    else:
+        selector = find_best_year
+    print(mode)
     ltable = []
     rtable = []
     for name in lnames:
         try:
-            best_year = find_best_year(name['value'])
+            best_year = selector(name['value'])
             best_year = [best_year[i] for i in [1,2,4,5,7,8,9,10,11,18,19,20,23,24,25,26,27,29]]
             ltable.append([name['value']]+best_year)
         except:
             pass
     for name in rnames:
         try:
-            best_year = find_best_year(name['value'])
+            best_year = selector(name['value'])
             best_year = [best_year[i] for i in [1,2,4,5,7,8,9,10,11,18,19,20,23,24,25,26,27,29]]
             rtable.append([name['value']]+best_year)
         except:

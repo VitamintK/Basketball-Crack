@@ -95,7 +95,8 @@ $( document ).ready(function(){
 			url: "/sub_draft",
 			data: {
 				playerl: JSON.stringify(dt),
-				playerr: JSON.stringify(rt)
+				playerr: JSON.stringify(rt),
+				mode: $('#selector').val()
 			},
 			success: function(data){
 				$('#team1 .stattable tbody').append(data.lstats);
