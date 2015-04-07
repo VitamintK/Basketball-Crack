@@ -18,6 +18,7 @@ var display_loss = function(player_name, stats){
 		$('#input_stuff').html(currentcontents);
 		replace_table(stats);
 		prep_buttons();
+		$("#player").focus();
 	})
 }
 

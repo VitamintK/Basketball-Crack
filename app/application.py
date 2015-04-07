@@ -5,12 +5,13 @@ import random
 import zlib
 import os
 
+json_dir = 'json/'
 
 app = Flask(__name__)
 
 HEADERS = ["Season", "Age", "Tm", "Lg", "Pos", "G", "GS", "MP", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS"]
 
-players = os.listdir("super_json/")
+players = os.listdir(json_dir)
 
 def generate_hashes():
     hashdict = dict()
@@ -23,7 +24,7 @@ def generate_hashes():
 def pick_a_year():
     player = random.choice(players)
     player_name = player[:-5]
-    with open('super_json/{}'.format(player)) as pjson:
+    with open('{}{}'.format(json_dir,player)) as pjson:
         player_json = json.load(pjson)
     rows = []
     for row in player_json['per_game'][1:]:
@@ -36,7 +37,7 @@ def pick_a_year():
 def pick_all_years():
     player = random.choice(players)
     player_name = player[:-5]
-    with open('super_json/{}'.format(player)) as pjson:
+    with open('{}{}'.format(json_dir,player)) as pjson:
         player_json = json.load(pjson)
     rows = []
     for row in player_json['per_game'][1:]:
@@ -90,7 +91,7 @@ def shutdown():
     return 'Server shutting down...'
 
 if __name__ == '__main__':
-    app.run()#host = '0.0.0.0')
+    app.run(host = '0.0.0.0')
 
 
 #print(json.dumps(player_json, sort_keys=True, indent=4, separators=(',', ': ')))

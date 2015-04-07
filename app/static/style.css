@@ -4,7 +4,7 @@ body{
 }
 #container{
 	font-size: 1.2em;
-	height: 20em;
+	height: 23em;
 	margin-left: 2em;
 	margin-right: 2em;
 	overflow-y: auto;
@@ -17,8 +17,8 @@ body{
 	margin-left: auto;
 	margin-top: auto;
 	position: relative;
-	top: 50%;
-	transform: translateY(-50%);
+/*	top: 50%;
+	transform: translateY(-50%);*/
 }
 #stattable td, th{
 	border: 1px solid #AAA;
