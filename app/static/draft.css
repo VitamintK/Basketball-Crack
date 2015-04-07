@@ -11,13 +11,23 @@ body{
 	float:left;
 	width:250px;
 	min-height:400px;
-	top:20px;
+	top:50px;
 	position:fixed;
 }
 #right { float:right; width:250px; min-height:400px;
 	right:0;
-	top:20px;
+	top:50px;
 	position:fixed;
+}
+#header{
+	text-align:center;
+}
+
+#selector{
+	margin:auto;
+	margin-top: 5px;
+	margin-bottom:5px;
+	width:200px;
 }
 #main{
 	font-size:10px;

@@ -13,11 +13,19 @@
 </head>
 <body>
 	<div id="wrap">
-    	<div id="header"><select id="selector"><option value="best">Best Year (highest scoring)</option><option value="worst">Worst Year (lowest scoring)</option>
-    		<option value="rookie">Rookie Year</option><option value="career">Career Totals</option><option value="recent">This Year</option></select></div>
+    	<div id="header">
+    		<label class="control-label">How should the stats be determined?</label>
+    		<select  id="selector">
+    			<option value="best">Best Year (highest scoring)</option>
+    			<option value="worst">Worst Year (lowest scoring)</option>
+    			<option value="rookie">Rookie Year</option>
+    			<option value="career">Career Totals</option>
+    			<option value="recent">This Year</option>
+    		</select>
+    	</div>
     	<div id="bod">
         	<form id="left" class="form-inline">
-        		<div>TEAM NAME: <input type="text" class="form-control teamname"></div>
+        		<div>TEAM 1 NAME: <input type="text" class="form-control teamname"></div>
         		{% for i in positions%}
         			<div class="pos">{{i}}: <input type="text" name="{{i}}" class="form-control pos_inp"></div>
         		{%endfor%}
@@ -25,7 +33,7 @@
         	</form>
         	
         	<form id="right" class="form-inline">
-        		<div>TEAM NAME: <input type="text" class="form-control teamname"></div>
+        		<div>TEAM 2 NAME: <input type="text" class="form-control teamname"></div>
         		{% for i in positions%}
         			<div class="pos">{{i}}: <input type="text" name="{{i}}" class="form-control pos_inp"></div>
         		{%endfor%}
