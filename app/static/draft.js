@@ -8,8 +8,8 @@ var compute_totals = function(stats){
 				
 			}else if(index==8){
 				t_stats[index] = (t_stats[6]/t_stats[7]).toFixed(3);
-			}else if(index == 11){
-				t_stats[index] = (t_stats[9]/t_stats[10]).toFixed(3);
+			}else if(index == 12){
+				t_stats[index] = (t_stats[10]/t_stats[11]).toFixed(3);
 			}
 			else if($.inArray(index, [2,3])>-1){
 				t_stats[index] = 0;
@@ -59,14 +59,23 @@ var set_shared = function(){
 	tright = $("#team2 .stattable tfoot").html();
 	tright = $(tright);
 	tright.find("td:eq(0)").html($("#right .teamname").val());
-	$("#shared .stattable").html("<tr>"+tleft.html()+"</tr>" + "<tr>" + tright.html() + "</tr>");
+	$("#shared .stattable").html("<tr>"+ $("#team1 .stattable tbody :eq(0)").html() + "</tr>" + "<tr>"+tleft.html()+"</tr>" + "<tr>" + tright.html() + "</tr>");
 	$("#shared .stattable tbody").children().each(function(row){
 		$(this).children().each(function(column){
 			console.log($(this).html())
-			if(parseFloat(l_t_stats[column]) >= parseFloat(r_t_stats[column]) && row==0){
-				$(this).addClass('winner');
-			} else if(parseFloat(l_t_stats[column]) <= parseFloat(r_t_stats[column]) && row==1){
-				$(this).addClass('winner');
+			if($.inArray(column, [8,9,12,13,14,15,16,18])>-1){
+				if(parseFloat(l_t_stats[column]) >= parseFloat(r_t_stats[column]) && row==1){
+					$(this).addClass('winner');
+				} else if(parseFloat(l_t_stats[column]) <= parseFloat(r_t_stats[column]) && row==2){
+					$(this).addClass('winner');
+				}
+			} else if(column == 17){
+				if(l_t_stats[column] <= r_t_stats[column] && row==1){
+					$(this).addClass('winner');
+				}
+				else if(l_t_stats[column] >= r_t_stats[column] && row==2){
+					$(this).addClass('winner');
+				}
 			}
 		});
 	});

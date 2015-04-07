@@ -114,7 +114,7 @@ def crack():
 def nik():
     pass
 
-f_head = [pHEADERS[i] for i in [1,2,4,5,7,8,9,10,18,19,20,23,24,25,26,27,29]]
+f_head = [pHEADERS[i] for i in [1,2,4,5,7,8,9,10,11,18,19,20,23,24,25,26,27,29]]
 @app.route('/draft')
 def draft():
     positions = ["PG", "SG", "G", "SF", "PF", "F", "C", "C", "UTIL", "UTIL", "BENCH", "BENCH", "BENCH"]
@@ -129,14 +129,14 @@ def sub_draft():
     for name in lnames:
         try:
             best_year = find_best_year(name['value'])
-            best_year = [best_year[i] for i in [1,2,4,5,7,8,9,10,18,19,20,23,24,25,26,27,29]]
+            best_year = [best_year[i] for i in [1,2,4,5,7,8,9,10,11,18,19,20,23,24,25,26,27,29]]
             ltable.append([name['value']]+best_year)
         except:
             pass
     for name in rnames:
         try:
             best_year = find_best_year(name['value'])
-            best_year = [best_year[i] for i in [1,2,4,5,7,8,9,10,18,19,20,23,24,25,26,27,29]]
+            best_year = [best_year[i] for i in [1,2,4,5,7,8,9,10,11,18,19,20,23,24,25,26,27,29]]
             rtable.append([name['value']]+best_year)
         except:
             pass
