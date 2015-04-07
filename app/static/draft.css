@@ -1,10 +1,24 @@
 /*#wrap { width:500px; margin:0 auto; }*/
+body{
+	width:1263px;
+	overflow-x:auto;
+}
 #bod {
 	overflow:auto; 
 	text-align: center;
 }
-#left { float:left; width:250px; min-height:400px; }
-#right { float:right; width:250px; min-height:400px; }
+#left {
+	float:left;
+	width:250px;
+	min-height:400px;
+	top:20px;
+	position:fixed;
+}
+#right { float:right; width:250px; min-height:400px;
+	right:0;
+	top:20px;
+	position:fixed;
+}
 #main{
 	font-size:10px;
 	text-align: center;
@@ -38,5 +52,5 @@ overflow-y: auto;
 overflow-x: hidden;
 }
 .winner{
-	background-color: green;
+	background-color: #5CB85C;
 }
