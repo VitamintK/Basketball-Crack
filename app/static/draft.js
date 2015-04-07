@@ -1,3 +1,5 @@
+var l_t_stats;
+var r_t_stats;
 var compute_totals = function(stats){
 	t_stats = ['Total'];
 	$.each(stats, function(row_num, row){
@@ -11,7 +13,6 @@ var compute_totals = function(stats){
 			}
 			else if($.inArray(index, [2,3])>-1){
 				t_stats[index] = 0;
-				console.log(index);
 			} else{
 				if(value==''){
 					value = 0;
@@ -38,26 +39,37 @@ var add_t_stats = function(table){
 			stats.push(st);
 		}
 	});
-	console.log(stats);
 	return stats;
 }
 
-var display_t_stats = function(table){
-	var t_stats = compute_totals(add_t_stats(table));
+var display_t_stats = function(table, stats){
+	var t_stats = stats;
 	t_array = [];
-	console.log(t_array);
 	$.each(t_stats, function(index, value){
 		t_array.push("<td>"+value+"</td>");
 	});
 	thtml = "<tr>"+t_array.join()+"</tr>";
-	console.log(thtml);
 	table.parent().children('tfoot').html(thtml)
 }
 
 var set_shared = function(){
 	tleft = $("#team1 .stattable tfoot").html();
+	tleft = $(tleft);
+	tleft.find("td:eq(0)").html($("#left .teamname").val());
 	tright = $("#team2 .stattable tfoot").html();
-	$("#shared .stattable").html(tleft + tright);
+	tright = $(tright);
+	tright.find("td:eq(0)").html($("#right .teamname").val());
+	$("#shared .stattable").html("<tr>"+tleft.html()+"</tr>" + "<tr>" + tright.html() + "</tr>");
+	$("#shared .stattable tbody").children().each(function(row){
+		$(this).children().each(function(column){
+			console.log($(this).html())
+			if(parseFloat(l_t_stats[column]) >= parseFloat(r_t_stats[column]) && row==0){
+				$(this).addClass('winner');
+			} else if(parseFloat(l_t_stats[column]) <= parseFloat(r_t_stats[column]) && row==1){
+				$(this).addClass('winner');
+			}
+		});
+	});
 }
 
 var lstats = [];
@@ -79,23 +91,22 @@ $( document ).ready(function(){
 			success: function(data){
 				$('#team1 .stattable tbody').append(data.lstats);
 				$('#team2 .stattable tbody').append(data.rstats);
-				console.log(data.rstats);
 				$('#left').children('div').each(function(index){
 					if($.inArray($(this).children('input').val(), data.lnames)>-1){
 
 						$(this).html($(this).text()+$(this).children('input').val());
-						console.log($(this).children('input').val());
 					}
 				});
 				$('#right').children('div').each(function(index){
 					if($.inArray($(this).children('input').val(), data.rnames)>-1){
 
 						$(this).html($(this).text()+$(this).children('input').val());
-						console.log($(this).children('input').val());
 					}
 				});
-				display_t_stats($('#team1 .stattable tbody'));
-				display_t_stats($('#team2 .stattable tbody'));
+				l_t_stats = compute_totals( add_t_stats($('#team1 .stattable tbody')));
+				r_t_stats = compute_totals( add_t_stats($('#team2 .stattable tbody')));
+				display_t_stats($('#team1 .stattable tbody'),l_t_stats);
+				display_t_stats($('#team2 .stattable tbody'),r_t_stats);
 				set_shared();
 			}
 		});

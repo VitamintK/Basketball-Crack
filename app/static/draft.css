@@ -35,3 +35,6 @@ overflow-y: auto;
 /* prevent horizontal scrollbar */
 overflow-x: hidden;
 }
+.winner{
+	background-color: green;
+}

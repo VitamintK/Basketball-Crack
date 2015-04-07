@@ -16,7 +16,7 @@
     	<div id="header">HEADER</div>
     	<div id="bod">
         	<form id="left" class="form-inline">
-        		<div>TEAM NAME: <input type="text" class="form-control"></div>
+        		<div>TEAM NAME: <input type="text" class="form-control teamname"></div>
         		{% for i in positions%}
         			<div class="pos">{{i}}: <input type="text" name="{{i}}" class="form-control pos_inp"></div>
         		{%endfor%}
@@ -24,7 +24,7 @@
         	</form>
         	
         	<form id="right" class="form-inline">
-        		<div>TEAM NAME: <input type="text" class="form-control"></div>
+        		<div>TEAM NAME: <input type="text" class="form-control teamname"></div>
         		{% for i in positions%}
         			<div class="pos">{{i}}: <input type="text" name="{{i}}" class="form-control pos_inp"></div>
         		{%endfor%}
