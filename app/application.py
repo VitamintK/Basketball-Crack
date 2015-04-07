@@ -79,6 +79,41 @@ def find_this_year(player):
         if row[0] == current_season:
             return row
 
+def find_worst_year(player):
+    try:
+        with open('{}{}.json'.format(json_dir, player)) as pjson:
+            player_json = json.load(pjson)
+    except:
+        return None
+    rows = []
+    trade_years = []
+    for row in player_json['totals'][1:]:
+
+        if row[0] == 'Career':
+            break
+        elif row[0] not in trade_years:
+            rows.append(row)
+        if row[2] == 'TOT':
+            trade_years.append(row[0])
+    def int_if_can(x):
+        try:
+            return int(x)
+        except:
+            return 0
+    best_scoring_year = min(rows, key = lambda x: int_if_can(x[-1]))
+    return best_scoring_year
+
+def find_career_totals(player):
+    try:
+        with open('{}{}.json'.format(json_dir, player)) as pjson:
+            player_json = json.load(pjson)
+    except:
+        return None
+    rows = []
+    for row in player_json['totals'][1:]:
+        if row[0] == 'Career':
+            return row
+
 def find_best_year(player):
     try:
         with open('{}{}.json'.format(json_dir, player)) as pjson:
@@ -154,6 +189,10 @@ def sub_draft():
         selector = find_first_year
     elif mode == 'recent':
         selector = find_this_year
+    elif mode == 'career':
+        selector = find_career_totals
+    elif mode == 'worst':
+        selector = find_worst_year
     else:
         selector = find_best_year
     print(mode)
