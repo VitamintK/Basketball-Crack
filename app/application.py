@@ -99,7 +99,7 @@ def find_worst_year(player):
         try:
             return int(x)
         except:
-            return 0
+            return 100000
     best_scoring_year = min(rows, key = lambda x: int_if_can(x[-1]))
     return best_scoring_year
 
