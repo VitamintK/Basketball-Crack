@@ -2,6 +2,12 @@ body{
 	font-family: Helvetica, Arial, sans-serif;
 	text-align: center;
 }
+#score{
+	float:left;
+	margin:auto;
+	position:fixed;
+	left:2.3em;
+}
 #container{
 	font-size: 1.2em;
 	height: 23em;

@@ -1,3 +1,9 @@
+var streak = 0;
+
+var display_streak = function(){
+	$("#streak").html(streak);
+}
+
 var print_result = function(wl){
 	var message;
 	if(wl == 1){
@@ -45,10 +51,13 @@ var prep_buttons = function(){
 					replace_table(data.stats);
 					pnum = data.pnum;
 					$('#player').val('');
+					streak++;
+					display_streak();
 				} else {
 					$('#player').select();
+					streak = 0;
+					display_streak();
 				}
-				console.log(data);
 			},
 			error: function(data){
 				console.log(data);
@@ -65,6 +74,8 @@ var prep_buttons = function(){
 			success: function(data){
 				pnum = data.pnum;
 				display_loss(data.player_name, data.stats);
+				streak = 0;
+				display_streak();
 			}
 		});
 	});
