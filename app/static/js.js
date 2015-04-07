@@ -8,8 +8,12 @@ var print_result = function(wl){
 	$('#resMessage').html(message);
 }
 
+var wikipediaize = function(player_name){
+	return('http://en.wikipedia.org/wiki/' + player_name);
+}
+
 var display_loss = function(player_name, stats){
-	message = '<h1 class="alert alert-danger">YOU GAVE UP.  The player was ' + player_name + '!!!!</h1>';
+	message = '<h1 class="alert alert-danger">YOU GAVE UP.  The player was <a target="_blank" href="' + wikipediaize(player_name) + '"">' + player_name + '</a>!!!!</h1>';
 	$('#resMessage').html(message);
 	nextbtn = '<button id="next" class="btn btn-default"> NEXT </button>'
 	currentcontents=$('#input_stuff').html();

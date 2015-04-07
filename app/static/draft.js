@@ -1,0 +1,111 @@
+var compute_totals = function(stats){
+	t_stats = ['Total'];
+	$.each(stats, function(row_num, row){
+		$.each(row, function(index, value){
+			if(index == 0){
+				
+			}else if(index==8){
+				t_stats[index] = (t_stats[6]/t_stats[7]).toFixed(3);
+			}else if(index == 11){
+				t_stats[index] = (t_stats[9]/t_stats[10]).toFixed(3);
+			}
+			else if($.inArray(index, [2,3])>-1){
+				t_stats[index] = 0;
+				console.log(index);
+			} else{
+				if(value==''){
+					value = 0;
+				}
+				if(t_stats[index]){
+					t_stats[index] = parseFloat(t_stats[index])+Math.round(10*parseFloat(value))/10;
+				} else {
+					t_stats[index] = parseFloat(value);
+				}
+			}
+		});
+	});
+	return t_stats;
+}
+
+var add_t_stats = function(table){
+	stats = [];
+	table.children().each(function(index){
+		if(index != 0){
+			st = [];
+			$(this).children().each(function(index){
+				st.push($(this).text());
+			});
+			stats.push(st);
+		}
+	});
+	console.log(stats);
+	return stats;
+}
+
+var display_t_stats = function(table){
+	var t_stats = compute_totals(add_t_stats(table));
+	t_array = [];
+	console.log(t_array);
+	$.each(t_stats, function(index, value){
+		t_array.push("<td>"+value+"</td>");
+	});
+	thtml = "<tr>"+t_array.join()+"</tr>";
+	console.log(thtml);
+	table.parent().children('tfoot').html(thtml)
+}
+
+var set_shared = function(){
+	tleft = $("#team1 .stattable tfoot").html();
+	tright = $("#team2 .stattable tfoot").html();
+	$("#shared .stattable").html(tleft + tright);
+}
+
+var lstats = [];
+var rstats = [];
+$( document ).ready(function(){
+	$('.pos_inp').autocomplete({
+		position:{collision: "flip"},
+		source: names
+	});
+	$('.go_btn').click(function(){
+		var dt = $('#left').serializeArray();
+		var rt = $('#right').serializeArray();
+		$.ajax({
+			url: "/sub_draft",
+			data: {
+				playerl: JSON.stringify(dt),
+				playerr: JSON.stringify(rt)
+			},
+			success: function(data){
+				$('#team1 .stattable tbody').append(data.lstats);
+				$('#team2 .stattable tbody').append(data.rstats);
+				console.log(data.rstats);
+				$('#left').children('div').each(function(index){
+					if($.inArray($(this).children('input').val(), data.lnames)>-1){
+
+						$(this).html($(this).text()+$(this).children('input').val());
+						console.log($(this).children('input').val());
+					}
+				});
+				$('#right').children('div').each(function(index){
+					if($.inArray($(this).children('input').val(), data.rnames)>-1){
+
+						$(this).html($(this).text()+$(this).children('input').val());
+						console.log($(this).children('input').val());
+					}
+				});
+				display_t_stats($('#team1 .stattable tbody'));
+				display_t_stats($('#team2 .stattable tbody'));
+				set_shared();
+			}
+		});
+		return false;
+	});
+	$('.pos_inp').keypress(function (e){
+		var key = e.which;
+		if(key == 13) {
+			$('#go_btn1').click();
+			return false;
+		}
+	});
+});

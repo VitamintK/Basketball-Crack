@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Basketball DRAFT</title>
+    <script src="http://code.jquery.com/jquery-2.1.3.min.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <link rel="stylesheet" href="static/draft.css" type="text/css" media="all">
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script type="text/javascript" src="static/draft.js"></script>
+	<script>var names = [{% for name in names %} '{{name}}', {% endfor %}];</script>
+</head>
+<body>
+	<div id="wrap">
+    	<div id="header">HEADER</div>
+    	<div id="bod">
+        	<form id="left" class="form-inline">
+        		<div>TEAM NAME: <input type="text" class="form-control"></div>
+        		{% for i in positions%}
+        			<div class="pos">{{i}}: <input type="text" name="{{i}}" class="form-control pos_inp"></div>
+        		{%endfor%}
+        		<button id="go_btn1" class="go_btn btn btn-primary btn-large">SUBMIT THIS SHIT</button>
+        	</form>
+        	
+        	<form id="right" class="form-inline">
+        		<div>TEAM NAME: <input type="text" class="form-control"></div>
+        		{% for i in positions%}
+        			<div class="pos">{{i}}: <input type="text" name="{{i}}" class="form-control pos_inp"></div>
+        		{%endfor%}
+        		<button id="go_btn2" class="go_btn btn btn-primary btn-large">SUBMIT THIS SHIT</button>
+        	</form>
+        	<div id="main">
+        		{% for i in ["team1", "team2"]%}
+        			<div id={{i}}> 
+						<table class="stattable table table-striped table-bordered table-condensed">
+							<tfoot><tr><td></td></tr> </tfoot>
+							<tr>
+							{% for h in headers%}
+								<th>{{h}}</th>
+							{% endfor %}
+							</tr>
+							{% for t in table %}
+			    				<tr>
+			    				{% for i in t %}
+			        				<td>{{ i }}</td>
+			    				{% endfor %}
+			   					</tr>
+							{% endfor %}
+
+			        	</table>
+        			</div>
+        		{% endfor %}
+        		<div id="shared"> <table class="stattable table table-striped table-bordered table-condensed"></table></div>
+        	</div>
+    </div>
+</div>
+</body>
+</html>
