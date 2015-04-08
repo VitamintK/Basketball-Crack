@@ -13,11 +13,15 @@ body{
 	min-height:400px;
 	top:50px;
 	position:fixed;
+	height:90%;
+	overflow:auto;
 }
 #right { float:right; width:250px; min-height:400px;
 	right:0;
 	top:50px;
 	position:fixed;
+	overflow:auto;
+	height:90%;
 }
 #header{
 	text-align:center;

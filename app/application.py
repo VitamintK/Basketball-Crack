@@ -6,7 +6,13 @@ import zlib
 import os
 from datetime import date
 
-json_dir = 'super_json/'
+import json_sets
+
+json_dir = 'json/'
+
+game_set = json_sets.easy
+
+
 
 app = Flask(__name__)
 
@@ -24,7 +30,7 @@ def generate_hashes():
     return hashdict
 
 def pick_a_year():
-    player = random.choice(players)
+    player = random.choice(game_set)
     player_name = player[:-5]
     with open('{}{}'.format(json_dir,player)) as pjson:
         player_json = json.load(pjson)
@@ -37,7 +43,7 @@ def pick_a_year():
     return [random.choice(rows)], player_name
 
 def pick_all_years():
-    player = random.choice(players)
+    player = random.choice(game_set)
     player_name = player[:-5]
     with open('{}{}'.format(json_dir,player)) as pjson:
         player_json = json.load(pjson)
@@ -51,8 +57,7 @@ def pick_all_years():
     return rows, player_name
 
 def pick_this_year():
-    import this_year
-    this_year.this_year
+    json_sets.this_year
 
 def crc(name):
     return zlib.crc32(bytes(name.lower(), 'UTF-8'))
@@ -215,6 +220,12 @@ def sub_draft():
     return jsonify(lnames = [i[0] for i in ltable], rnames = [i[0] for i in rtable],
         left = ltable, right=rtable, lstats=render_template("dtable.html", headers=['Name'] + f_head, table=ltable),
         rstats=render_template("dtable.html", headers=['Name'] + f_head, table=rtable))
+
+@app.route('/a-z')
+def alpha():
+    import string
+    positions = list(string.ascii_uppercase)
+    return render_template("draft.html", positions = positions, names = [player[:-5] for player in players], headers = ['Name'] + f_head, table = [])
 
 @app.route('/shutdown', methods=['POST'])
 def shutdown():

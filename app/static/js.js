@@ -1,7 +1,10 @@
 var streak = 0;
+var max_streak = 0;
 
 var display_streak = function(){
+	max_streak = Math.max(streak, max_streak);
 	$("#streak").html(streak);
+	$('#maxstreak').html(max_streak);
 }
 
 var print_result = function(wl){

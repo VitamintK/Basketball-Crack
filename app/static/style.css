@@ -8,6 +8,12 @@ body{
 	position:fixed;
 	left:2.3em;
 }
+#maxscore{
+	float:right;
+	margin:auto;
+	position:fixed;
+	right:2.3em;
+}
 #container{
 	font-size: 1.2em;
 	height: 23em;
