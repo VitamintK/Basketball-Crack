@@ -6,7 +6,7 @@ import zlib
 import os
 from datetime import date
 
-json_dir = 'super-json/'
+json_dir = 'super_json/'
 
 app = Flask(__name__)
 
