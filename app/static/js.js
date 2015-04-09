@@ -1,5 +1,7 @@
-var streak = 0;
+var streak = 0;2
 var max_streak = 0;
+
+var submittedd = false;
 
 var display_streak = function(){
 	max_streak = Math.max(streak, max_streak);
@@ -41,34 +43,40 @@ var replace_table = function(newtable){
 
 var prep_buttons = function(){
 	$('#go_btn').click(function(){
-		var player = $('#player').val();
-		if(player!=''){
-			$.ajax({
-				url: "/submit",
-				data: {
-					player_name: player,
-					p_num: pnum
-				},
-				success: function(data){
-					print_result(data.successCode);
-					if(data.successCode == 1){
-						replace_table(data.stats);
-						pnum = data.pnum;
-						$('#player').val('');
-						streak++;
-						display_streak();
-					} else {
-						$('#player').select();
-						streak = 0;
-						display_streak();
+		if(submittedd != true){
+			submittedd = true;
+			var player = $('#player').val();
+			if(player!=''){
+				$.ajax({
+					url: "/submit",
+					data: {
+						player_name: player,
+						p_num: pnum
+					},
+					success: function(data){
+						print_result(data.successCode);
+						if(data.successCode == 1){
+							replace_table(data.stats);
+							pnum = data.pnum;
+							$('#player').val('');
+							streak++;
+							display_streak();
+						} else {
+							$('#player').select();
+							streak = 0;
+							display_streak();
+						}
+						submittedd = false;
+					},
+					error: function(data){
+						console.log(data);
+						submittedd = false;
 					}
-				},
-				error: function(data){
-					console.log(data);
-				}
-			});
+				});
+			}
 		}
 	});
+
 
 	$('#give_btn').click(function(){
 		$.ajax({
