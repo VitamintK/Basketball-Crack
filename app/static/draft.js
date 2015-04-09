@@ -1,5 +1,10 @@
 var l_t_stats;
 var r_t_stats;
+
+var roundto = function(thing, digits){
+	return Math.round((10*digits)*thing)/(10*digits);
+}
+
 var compute_totals = function(stats){
 	t_stats = ['Total'];
 	$.each(stats, function(row_num, row){
@@ -18,7 +23,7 @@ var compute_totals = function(stats){
 					value = 0;
 				}
 				if(t_stats[index]){
-					t_stats[index] = parseFloat(t_stats[index])+Math.round(10*parseFloat(value))/10;
+					t_stats[index] = roundto(parseFloat(t_stats[index])+Math.round(10*parseFloat(value))/10, 1);
 				} else {
 					t_stats[index] = parseFloat(value);
 				}
@@ -96,7 +101,8 @@ $( document ).ready(function(){
 			data: {
 				playerl: JSON.stringify(dt),
 				playerr: JSON.stringify(rt),
-				mode: $('#selector').val()
+				mode: $('#selector').val(),
+				criteria: $('#criteria').val()
 			},
 			success: function(data){
 				$('#team1 .stattable tbody').append(data.lstats);

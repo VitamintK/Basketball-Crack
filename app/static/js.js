@@ -42,30 +42,32 @@ var replace_table = function(newtable){
 var prep_buttons = function(){
 	$('#go_btn').click(function(){
 		var player = $('#player').val();
-		$.ajax({
-			url: "/submit",
-			data: {
-				player_name: player,
-				p_num: pnum
-			},
-			success: function(data){
-				print_result(data.successCode);
-				if(data.successCode == 1){
-					replace_table(data.stats);
-					pnum = data.pnum;
-					$('#player').val('');
-					streak++;
-					display_streak();
-				} else {
-					$('#player').select();
-					streak = 0;
-					display_streak();
+		if(player!=''){
+			$.ajax({
+				url: "/submit",
+				data: {
+					player_name: player,
+					p_num: pnum
+				},
+				success: function(data){
+					print_result(data.successCode);
+					if(data.successCode == 1){
+						replace_table(data.stats);
+						pnum = data.pnum;
+						$('#player').val('');
+						streak++;
+						display_streak();
+					} else {
+						$('#player').select();
+						streak = 0;
+						display_streak();
+					}
+				},
+				error: function(data){
+					console.log(data);
 				}
-			},
-			error: function(data){
-				console.log(data);
-			}
-		});
+			});
+		}
 	});
 
 	$('#give_btn').click(function(){

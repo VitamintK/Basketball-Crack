@@ -62,15 +62,15 @@ def pick_this_year():
 def crc(name):
     return zlib.crc32(bytes(name.lower(), 'UTF-8'))
 
-def find_first_year(player):
+def find_first_year(player, criteria):
     try:
         with open('{}{}.json'.format(json_dir, player)) as pjson:
             player_json = json.load(pjson)
     except:
         return None
-    return player_json['totals'][1]
+    return player_json[criteria][1]
 
-def find_this_year(player):
+def find_this_year(player, criteria):
     current_year = date.today().year - 1
     current_season = str(current_year) + '-' + str(current_year%1000 + 1)
     print(current_season)
@@ -80,11 +80,11 @@ def find_this_year(player):
             player_json = json.load(pjson)
     except:
         return None
-    for row in player_json['totals'][1:]:
+    for row in player_json[criteria][1:]:
         if row[0] == current_season:
             return row
 
-def find_worst_year(player):
+def find_worst_year(player, criteria):
     try:
         with open('{}{}.json'.format(json_dir, player)) as pjson:
             player_json = json.load(pjson)
@@ -92,7 +92,7 @@ def find_worst_year(player):
         return None
     rows = []
     trade_years = []
-    for row in player_json['totals'][1:]:
+    for row in player_json[criteria][1:]:
 
         if row[0] == 'Career':
             break
@@ -100,43 +100,43 @@ def find_worst_year(player):
             rows.append(row)
         if row[2] == 'TOT':
             trade_years.append(row[0])
-    def int_if_can(x):
+    def float_if_can(x):
         try:
-            return int(x)
+            return float(x)
         except:
             return 100000
-    best_scoring_year = min(rows, key = lambda x: int_if_can(x[-1]))
+    best_scoring_year = min(rows, key = lambda x: float_if_can(x[-1]))
     return best_scoring_year
 
-def find_career_totals(player):
+def find_career_totals(player, criteria):
     try:
         with open('{}{}.json'.format(json_dir, player)) as pjson:
             player_json = json.load(pjson)
     except:
         return None
     rows = []
-    for row in player_json['totals'][1:]:
+    for row in player_json[criteria][1:]:
         if row[0] == 'Career':
             return row
 
-def find_best_year(player):
+def find_best_year(player, criteria):
     try:
         with open('{}{}.json'.format(json_dir, player)) as pjson:
             player_json = json.load(pjson)
     except:
         return None
     rows = []
-    for row in player_json['totals'][1:]:
+    for row in player_json[criteria][1:]:
         if row[0] == 'Career':
             break
         else:
             rows.append(row)
-    def int_if_can(x):
+    def float_if_can(x):
         try:
-            return int(x)
+            return float(x)
         except:
             return 0
-    best_scoring_year = max(rows, key = lambda x: int_if_can(x[-1]))
+    best_scoring_year = max(rows, key = lambda x: float_if_can(x[-1]))
     return best_scoring_year
 
 hashdict = generate_hashes()
@@ -188,6 +188,12 @@ def sub_draft():
     lnames = json.loads(request.args.get('playerl'))
     rnames = json.loads(request.args.get('playerr'))
     mode = request.args.get('mode')
+    criteria = request.args.get('criteria')
+    print(criteria)
+    if criteria == 'per_game': #FIX THIS SHIT CODE LATER
+        relevant_stat_indexes = [1,2,4,5,7,8,9,10,11,17,18,19,22,23,24,25,26,28]
+    else:
+       relevant_stat_indexes = [1,2,4,5,7,8,9,10,11,18,19,20,23,24,25,26,27,29]
     if mode=='best':
         selector = find_best_year
     elif mode == 'rookie':
@@ -205,15 +211,15 @@ def sub_draft():
     rtable = []
     for name in lnames:
         try:
-            best_year = selector(name['value'])
-            best_year = [best_year[i] for i in [1,2,4,5,7,8,9,10,11,18,19,20,23,24,25,26,27,29]]
+            best_year = selector(name['value'], criteria)
+            best_year = [best_year[i] for i in relevant_stat_indexes]
             ltable.append([name['value']]+best_year)
         except:
             pass
     for name in rnames:
         try:
-            best_year = selector(name['value'])
-            best_year = [best_year[i] for i in [1,2,4,5,7,8,9,10,11,18,19,20,23,24,25,26,27,29]]
+            best_year = selector(name['value'], criteria)
+            best_year = [best_year[i] for i in relevant_stat_indexes]
             rtable.append([name['value']]+best_year)
         except:
             pass
