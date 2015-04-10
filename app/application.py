@@ -4,7 +4,9 @@ import json
 import random
 import zlib
 import os
+import pickle
 from datetime import date
+from uuid import uuid4
 
 import json_sets
 
@@ -20,10 +22,14 @@ HEADERS = ["Season", "Age", "Tm", "Lg", "Pos", "G", "GS", "MP", "FG", "FGA", "FG
 pHEADERS = ["Season", "Age", "Tm", "Lg", "Pos", "G", "GS", "MP", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "EFG", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS"]
 
 players = os.listdir(json_dir)
+LEADERBOARD_FILE = 'leaderboard'
 
-if True:
+def _generate_sid():
+        return str(uuid4())
+
+if False:
     import os
-    import cPickle as pickle
+    import pickle
 
     import base64
     import hmac
@@ -94,7 +100,7 @@ if True:
             self._cache = OrderedDict()
 
         def _normalize(self):
-            print "Session cache size: %s" % len(self._cache)
+            print("Session cache size: %s" % len(self._cache))
             if len(self._cache) > self.num_to_store:
                 while len(self._cache) > (self.num_to_store * 0.8):  # flush 20% of the cache
                     self._cache.popitem(False)
@@ -152,7 +158,7 @@ if True:
             return os.path.exists(fname)
 
         def remove(self, sid):
-            print 'Removing session: %s' % sid
+            print('Removing session: %s' % sid)
             fname = os.path.join(self.path, sid)
             if os.path.exists(fname):
                 os.unlink(fname)
@@ -169,14 +175,14 @@ if True:
             with open(fname, 'w'):
                 pass
 
-            print "Created new session: %s" % sid
+            print("Created new session: %s" % sid)
 
             return ManagedSession(sid=sid)
 
         def get(self, sid, digest):
             'Retrieve a managed session by session-id, checking the HMAC digest'
 
-            print "Looking for session: %s, %s" % (sid, digest)
+            print("Looking for session: %s, %s" % (sid, digest))
 
             fname = os.path.join(self.path, sid)
             data = None
@@ -188,10 +194,10 @@ if True:
                     with open(fname) as f:
                         randval, hmac_digest, data = pickle.load(f)
                 except:
-                    print "Error loading session file"
+                    print("Error loading session file")
 
             if not data:
-                print "Missing data?"
+                print("Missing data?")
                 return self.new_session()
 
             # This assumes the file is correct, if you really want to
@@ -199,14 +205,14 @@ if True:
             # can re-calculate the hmac
 
             if hmac_digest != digest:
-                print "Invalid HMAC for session"
+                print("Invalid HMAC for session")
                 return self.new_session()
 
             return ManagedSession(data, sid=sid, randval=randval, hmac_digest=hmac_digest)
 
         def put(self, session):
             'Store a managed session'
-            print "Storing session: %s" % session.sid
+            print("Storing session: %s" % session.sid)
 
             if not session.hmac_digest:
                 session.sign(self.secret)
@@ -236,7 +242,7 @@ if True:
                     if request.path.startswith(sp):
                         return None
 
-                print 'Missing cookie'
+                print('Missing cookie')
                 return self.manager.new_session()
 
             sid, digest = cookie_val.split('!', 1)
@@ -247,6 +253,9 @@ if True:
             return self.manager.new_session()
 
         def save_session(self, app, session, response):
+            print('ITS BEING CALLED')
+            print(session.__dict__)
+            print(bool(session))
             domain = self.get_cookie_domain(app)
             if not session:
                 self.manager.remove(session.sid)
@@ -390,25 +399,35 @@ hashdict = generate_hashes()
 
 @app.route('/')
 def hello_world():
+    #sid = _generate_sid
+    if session['username']:
+        session['username'] = _generate_sid()
+        session['score'] = 0
     table, player_name = pick_a_year()
     pnum = crc(player_name)
     return render_template("index.html", headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players])
 
 @app.route('/submit', methods=['GET'])
 def submit():
+#    print(session.__dict__)
     player = request.args.get('player_name');
     pnum = request.args.get('p_num');
     print(player)
-    print(crc(player))
-    print(pnum)
+    #print(crc(player))
+    #print(pnum)
+    print(session['username'])
+    print(session['score'])
     if crc(player) == int(pnum):
         table, player_name = pick_a_year()
+        session['score'] += 1
         return jsonify(successCode = '1', pnum = crc(player_name), stats = render_template("table.html", headers = HEADERS, table=table))
     else:
+        session['score'] = 0
         return jsonify(successCode = '0')
 
 @app.route('/giveup', methods=['GET'])
 def giveup():
+    session['score'] = 0
     pnum = request.args.get('p_num')
     old_player_name = hashdict[pnum]
     table, player_name = pick_a_year()
@@ -485,8 +504,15 @@ def shutdown():
     shutdown_server()
     return 'Server shutting down...'
 
+with open('secret.txt') as j:
+    app.secret_key = j.read()
+#app.config['SESSION_PATH'] = "/session"
+#app.config['SECRET_KEY'] = 'absbdfbdbf'
+#skip_paths = ['/static']
+#app.session_interface = ManagedSessionInterface(CachingSessionManager(FileBackedSessionManager(app.config['SESSION_PATH'], app.config['SECRET_KEY']), 1000), skip_paths, datetime.timedelta(days=1))
+
 if __name__ == '__main__':
-    app.run(debug = True)#host = '0.0.0.0')
+    app.run(host = '0.0.0.0')
 
 
 #print(json.dumps(player_json, sort_keys=True, indent=4, separators=(',', ': ')))

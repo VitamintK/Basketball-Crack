@@ -9,6 +9,8 @@
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
 	<script> var pnum = {{pnum}};
 	var names = [{% for name in names %} "{{name|safe}}", {% endfor %}];
 	</script>
@@ -18,6 +20,31 @@
 	<div class="alert alert-success" id="maxscore"><h2>HIGHEST STREAK: <span id="maxstreak">0</span></h2></div>
 	<h1>NAME THAT NBA PLAYER</h1>
 	<h2>Whose statline is this?</h2>
+
+<!-- Button trigger modal -->
+	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+	  Launch demo modal
+	</button>
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	  <div class="modal-dialog">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Submit your score!!!</h4>
+	      </div>
+	      <div class="modal-body">
+		  		Your Name: <input type="text" id="user_name" name="username" class="form-control" placeholder="Your Name">
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	        <button type="button" class="btn btn-primary">Submit</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
+
 	<!--<div><img src="static/kobe-bryant.jpg" style="height:100px"></img></div>-->
 	<div id="container">
 		<table id = "stattable" class="table table-striped table-bordered table-condensed">

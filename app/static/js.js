@@ -1,7 +1,13 @@
 var streak = 0;2
 var max_streak = 0;
+var u_name;
 
 var submittedd = false;
+var prompt_submit = true;
+
+var prompt_submission = function(){
+	$('#myModal').modal('show');
+}
 
 var display_streak = function(){
 	max_streak = Math.max(streak, max_streak);
@@ -65,6 +71,7 @@ var prep_buttons = function(){
 							$('#player').select();
 							streak = 0;
 							display_streak();
+							setTimeout(prompt_submission, 400);
 						}
 						submittedd = false;
 					},
@@ -89,6 +96,7 @@ var prep_buttons = function(){
 				display_loss(data.player_name, data.stats);
 				streak = 0;
 				display_streak();
+				setTimeout(prompt_submission, 400);
 			}
 		});
 	});
@@ -107,6 +115,12 @@ var prep_buttons = function(){
 	});
 }
 
-$( document ).ready(function(){
+$(document).ready(function(){
+	//alert("bitch");
+	$('#myModal').on('shown.bs.modal', function () {
+  		$('#user_name').focus();
+	});
+
 	prep_buttons();
+
 });
