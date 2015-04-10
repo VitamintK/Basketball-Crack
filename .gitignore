@@ -43,3 +43,4 @@ Temporary Items
 .apdisk
 .elasticbeanstalk/
 secret.txt
+app/secret.txt
