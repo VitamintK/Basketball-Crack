@@ -23,7 +23,7 @@
 
 <!-- Button trigger modal -->
 	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-	  Launch demo modal
+	  Leaderboard
 	</button>
 
 	<!-- Modal -->
@@ -35,11 +35,16 @@
 	        <h4 class="modal-title" id="myModalLabel">Submit your score!!!</h4>
 	      </div>
 	      <div class="modal-body">
-		  		Your Name: <input type="text" id="user_name" name="username" class="form-control" placeholder="Your Name">
+	      		<p>You had a streak of <span id="score_placement"></span>!  Submit your score to the leaderboard!?</p>
+	      		<div class="form-group" id="submit_form">
+		  		  <label class="control-label" for="user_name">Your Name</label>
+		  		  <input type="text" id="user_name" name="username" class="form-control" placeholder="Your Name" data-error="Numbers, letters, spaces only.">
+		  		  <span id="helpblock" class="help-block"></span>
+		  		</div>
 	      </div>
 	      <div class="modal-footer">
 	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-	        <button type="button" class="btn btn-primary">Submit</button>
+	        <button type="button" id="submit_score" class="btn btn-primary">Submit</button>
 	      </div>
 	    </div>
 	  </div>

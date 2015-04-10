@@ -1,4 +1,5 @@
-var streak = 0;2
+var streak = 0;
+var last_streak = 0;
 var max_streak = 0;
 var u_name;
 
@@ -6,6 +7,7 @@ var submittedd = false;
 var prompt_submit = true;
 
 var prompt_submission = function(){
+	$('#score_placement').html(last_streak);
 	$('#myModal').modal('show');
 }
 
@@ -49,10 +51,14 @@ var replace_table = function(newtable){
 
 var prep_buttons = function(){
 	$('#go_btn').click(function(){
+		//console.log('button press!' + $('#player').val());
 		if(submittedd != true){
+			//console.log('button goin in');
 			submittedd = true;
+			//console.log('true set');
 			var player = $('#player').val();
 			if(player!=''){
+				//console.log('player!=nothing')
 				$.ajax({
 					url: "/submit",
 					data: {
@@ -60,26 +66,37 @@ var prep_buttons = function(){
 						p_num: pnum
 					},
 					success: function(data){
+						submittedd = false;
 						print_result(data.successCode);
 						if(data.successCode == 1){
 							replace_table(data.stats);
 							pnum = data.pnum;
+							//console.log('set it to nothing');
 							$('#player').val('');
 							streak++;
 							display_streak();
 						} else {
 							$('#player').select();
+							last_streak = streak;
 							streak = 0;
 							display_streak();
-							setTimeout(prompt_submission, 400);
+							if(last_streak > 0){
+								setTimeout(prompt_submission, 400);
+							}
 						}
 						submittedd = false;
+						console.log('false set');
 					},
 					error: function(data){
 						console.log(data);
+						alert('please try again');
 						submittedd = false;
-					}
-				});
+						console.log('false set error');
+					},
+					/*always: function(){
+
+					}*/
+				}).always(function(){submittedd=false;});
 			}
 		}
 	});
@@ -94,9 +111,12 @@ var prep_buttons = function(){
 			success: function(data){
 				pnum = data.pnum;
 				display_loss(data.player_name, data.stats);
+				last_streak = streak;
 				streak = 0;
 				display_streak();
-				setTimeout(prompt_submission, 400);
+				if(last_streak > 0){
+					setTimeout(prompt_submission, 400);
+				}
 			}
 		});
 	});
@@ -120,7 +140,29 @@ $(document).ready(function(){
 	$('#myModal').on('shown.bs.modal', function () {
   		$('#user_name').focus();
 	});
-
+	$('#submit_score').click(function(){
+		//alert('i was clicked');
+		u_name = $('#user_name').val();
+		if(/[^a-zA-Z0-9 _]/.test(u_name)){
+			$('#helpblock').html('Please enter a name with only letters, numbers, and underscores.')
+			$('#submit_form').addClass('has-error')
+		} else {
+			$('#submit_form').removeClass('has-error');
+			//alert('test passed');
+			$.ajax({
+				url: "/submit_score",
+				data: {
+					score: last_streak,
+					name:  u_name
+				},
+				success: function(data){
+					
+				}
+			});
+			$('#helpblock').html('');
+		}
+	});
+	$('#user_name')
 	prep_buttons();
 
 });

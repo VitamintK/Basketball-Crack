@@ -54,3 +54,7 @@ overflow-y: auto;
 /* prevent horizontal scrollbar */
 overflow-x: hidden;
 }
+
+#score_placement{
+	font-weight: bold;
+}

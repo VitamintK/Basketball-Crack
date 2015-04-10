@@ -44,3 +44,4 @@ Temporary Items
 .elasticbeanstalk/
 secret.txt
 app/secret.txt
+app/hdict
