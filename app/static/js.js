@@ -58,7 +58,7 @@ var prep_buttons = function(){
 			//console.log('true set');
 			var player = $('#player').val();
 			if(player!=''){
-				//console.log('player!=nothing')
+				console.log('player!=nothing')
 				$.ajax({
 					url: "/submit",
 					data: {
@@ -97,6 +97,8 @@ var prep_buttons = function(){
 
 					}*/
 				}).always(function(){submittedd=false;});
+			} else {
+				submittedd = false;
 			}
 		}
 	});
