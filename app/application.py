@@ -38,6 +38,8 @@ class Leaderboard():
             #lb_file = open(leaderboard_file, 'wb')
             #self.lb_file = lb_file
             self.leaderboard = []
+        self.sorted_leaderboard = []
+        self.cache_sorted_leaderboard()
     def add(self, user_name, score):
         print(self.leaderboard)
         self.leaderboard.append((user_name, score))
@@ -45,6 +47,13 @@ class Leaderboard():
     def save_leaderboard(self):
         with open(self.lb_file,'wb') as lb_file:
             pickle.dump(self.leaderboard, lb_file)
+    def generate_sorted_leaderboard(self):
+        self.sorted_leaderboard = sorted(self.leaderboard, key=lambda x: x[1], reverse=True)
+    def cache_sorted_leaderboard(self):
+        if len(self.leaderboard) != len(self.sorted_leaderboard):
+            self.generate_sorted_leaderboard()
+        return self.sorted_leaderboard
+
 
 
 
@@ -215,14 +224,16 @@ def giveup():
 @app.route('/submit_score', methods=['GET'])
 def submit_score():
     user_score = request.args.get('score')
-    user_name = re.sub(r'\W+', '', request.args.get('name'))
+    user_name = re.sub(r'\W+ ', ' ', request.args.get('name'))
     print(session['most_recent_nonzero_score'], user_score)
     if str(session['most_recent_nonzero_score']) == str(user_score):
         print('over here')
         leaderboard.add(user_name, user_score)
     return "ah"
 
-
+@app.route('/leaderboard', methods=['GET'])
+def leaderboard_():
+    return render_template("headerstable.html", headers = ['Player', 'Streak'], table = leaderboard.sorted_leaderboard)
 
 @app.route('/crack')
 def crack():

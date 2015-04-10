@@ -156,13 +156,28 @@ $(document).ready(function(){
 					name:  u_name
 				},
 				success: function(data){
-					
+					$('#myModal').modal('hide');
 				}
 			});
 			$('#helpblock').html('');
 		}
 	});
-	$('#user_name')
+	$('#leaderboard_btn').click(function(){
+		//alert('i was clicked');
+		$.ajax({
+				url: "/leaderboard",
+				success: function(data){
+					$('#leaderboard_table').html(data);
+				}
+			});
+	});
+	$('#user_name').keypress(function (e){
+		var key = e.which;
+		if(key == 13) {
+			$('#submit_score').click();
+			return false;
+		}
+	});
 	prep_buttons();
 
 });
