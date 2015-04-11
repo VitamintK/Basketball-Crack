@@ -6,12 +6,16 @@ import zlib
 import os
 import pickle
 import re
+from collections import defaultdict
 from datetime import date
 from uuid import uuid4
 
 import json_sets
 
-json_dir = 'json/'
+root_dir = '' #this is for pythonanywhere, where the root dir is
+#root_dir = 'Basketball-Crack/app/'
+
+json_dir = root_dir + 'json/'
 
 game_set = json_sets.easy
 
@@ -37,18 +41,19 @@ class Leaderboard():
         except:
             #lb_file = open(leaderboard_file, 'wb')
             #self.lb_file = lb_file
-            self.leaderboard = []
+            self.leaderboard = defaultdict(list)
         self.sorted_leaderboard = []
         self.cache_sorted_leaderboard()
-    def add(self, user_name, score):
+    def add(self, user_name, score, sid):
         print(self.leaderboard)
-        self.leaderboard.append((user_name, score))
+        self.leaderboard[sid].append((user_name, score))
         self.save_leaderboard()
+        self.generate_sorted_leaderboard()
     def save_leaderboard(self):
         with open(self.lb_file,'wb') as lb_file:
             pickle.dump(self.leaderboard, lb_file)
     def generate_sorted_leaderboard(self):
-        self.sorted_leaderboard = sorted(self.leaderboard, key=lambda x: x[1], reverse=True)
+        self.sorted_leaderboard = sorted([max(value, key=lambda x: int(x[1])) for _,value in self.leaderboard.items()], key=lambda x: int(x[1]), reverse=True)
     def cache_sorted_leaderboard(self):
         if len(self.leaderboard) != len(self.sorted_leaderboard):
             self.generate_sorted_leaderboard()
@@ -184,7 +189,12 @@ hashdict = generate_hashes()
 @app.route('/')
 def hello_world():
     #sid = _generate_sid
-    if not session['username']:
+    try:
+        if not session['username']:
+            print(session['username'], ' is the session username')
+            session['username'] = _generate_sid()
+    except:
+        print('NO SESSIONS USERNAME!  generating a new one')
         session['username'] = _generate_sid()
     session['score'] = 0
     session['most_recent_nonzero_score'] = 0
@@ -228,12 +238,12 @@ def submit_score():
     print(session['most_recent_nonzero_score'], user_score)
     if str(session['most_recent_nonzero_score']) == str(user_score):
         print('over here')
-        leaderboard.add(user_name, user_score)
+        leaderboard.add(user_name, user_score, session['username'])
     return "ah"
 
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard_():
-    return render_template("headerstable.html", headers = ['Player', 'Streak'], table = leaderboard.sorted_leaderboard)
+    return render_template("headerstable.html", headers = ['Player', 'Streak'], table = leaderboard.cache_sorted_leaderboard())
 
 @app.route('/crack')
 def crack():
@@ -306,7 +316,7 @@ def shutdown():
     shutdown_server()
     return 'Server shutting down...'
 
-with open('secret.txt') as j:
+with open(root_dir + 'secret.txt') as j:
     app.secret_key = j.read()
 #app.config['SESSION_PATH'] = "/session"
 #app.config['SECRET_KEY'] = 'absbdfbdbf'
