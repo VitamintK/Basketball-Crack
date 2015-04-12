@@ -58,6 +58,8 @@ class Leaderboard():
         if len(self.leaderboard) != len(self.sorted_leaderboard):
             self.generate_sorted_leaderboard()
         return self.sorted_leaderboard
+    def __getitem__(self, thing):
+        return self.leaderboard[thing]
 
 
 
@@ -196,11 +198,17 @@ def hello_world():
     except:
         print('NO SESSIONS USERNAME!  generating a new one')
         session['username'] = _generate_sid()
+    try:
+        max_score = max((y[1] for y in leaderboard[session['username']]), key = lambda x: int(x))
+    except:
+        max_score = 0
+        raise
+    print(max_score)
     session['score'] = 0
     session['most_recent_nonzero_score'] = 0
     table, player_name = pick_a_year()
     pnum = crc(player_name)
-    return render_template("index.html", headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players])
+    return render_template("index.html", headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players], maxscore = max_score)
 
 @app.route('/submit', methods=['GET'])
 def submit():

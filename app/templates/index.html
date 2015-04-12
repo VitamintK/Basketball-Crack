@@ -13,11 +13,12 @@
 
 	<script> var pnum = {{pnum}};
 	var names = [{% for name in names %} "{{name|safe}}", {% endfor %}];
+	var max_streak = {{maxscore}};
 	</script>
 </head>
 <body>
 	<div class="alert alert-success" id="score"><h2>STREAK: <span id="streak">0</span></h2></div>
-	<div class="alert alert-success" id="maxscore"><h2>HIGHEST STREAK: <span id="maxstreak">0</span></h2></div>
+	<div class="alert alert-success" id="maxscore"><h2>HIGHEST STREAK: <span id="maxstreak">{{maxscore}}</span></h2></div>
 	<h1>NAME THAT NBA PLAYER</h1>
 
 <!-- Button trigger modal -->

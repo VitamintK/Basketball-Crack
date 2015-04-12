@@ -1,6 +1,6 @@
 var streak = 0;
 var last_streak = 0;
-var max_streak = 0;
+//var max_streak = 0;
 var u_name;
 
 var submittedd = false;
