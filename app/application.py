@@ -199,20 +199,19 @@ def hello_world():
         print('NO SESSIONS USERNAME!  generating a new one')
         session['username'] = _generate_sid()
     try:
-        max_score = max((y[1] for y in leaderboard[session['username']]), key = lambda x: int(x))
+        max_streak = session['max_streak']
     except:
-        max_score = 0
-        raise
-    print(max_score)
+        max_streak = 0
+    print(max_streak)
     session['score'] = 0
     session['most_recent_nonzero_score'] = 0
     table, player_name = pick_a_year()
     pnum = crc(player_name)
-    return render_template("index.html", headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players], maxscore = max_score)
+    return render_template("index.html", headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
 @app.route('/submit', methods=['GET'])
 def submit():
-    player = request.args.get('player_name');
+    player = request.args.get('player_name').strip();
     pnum = request.args.get('p_num');
     print(player)
     #print(crc(player))
@@ -223,6 +222,7 @@ def submit():
         table, player_name = pick_a_year()
         print(player_name)
         session['score'] += 1
+        session['max_streak'] = session['score']
         session['most_recent_nonzero_score'] = session['score']
         return jsonify(successCode = '1', pnum = crc(player_name), stats = render_template("table.html", headers = HEADERS, table=table))
     else:
