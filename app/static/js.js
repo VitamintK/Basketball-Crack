@@ -17,14 +17,21 @@ var display_streak = function(){
 	$('#maxstreak').html(max_streak);
 }
 
+function autoClose(selector, delay) {
+   var alert = $(selector).alert();
+   window.setTimeout(function() { alert.alert('close') }, delay);
+}
+
 var print_result = function(wl){
 	var message;
 	if(wl == 1){
-		message = '<h1 class="alert alert-success">YOU ARE RIGHT.</h1>';
+		message = '<h1 class="alert alert-success fade in res" role="alert">YOU ARE RIGHT.</h1>'; //PUT THE TAGS IN THE HTML NOT THE JS
 	}else{
-		message = '<h1 class="alert alert-danger">YOU ARE WRONG!!!!</h1>';
+		message = '<h1 class="alert alert-danger fade in res" role="alert">YOU ARE WRONG!!!!</h1>';
 	}
 	$('#resMessage').html(message);
+	autoClose('.res', 3000);
+
 }
 
 var wikipediaize = function(player_name){
@@ -32,7 +39,7 @@ var wikipediaize = function(player_name){
 }
 
 var display_loss = function(player_name, stats){
-	message = '<h1 class="alert alert-danger">YOU GAVE UP.  The player was <a target="_blank" href="' + wikipediaize(player_name) + '"">' + player_name + '</a>!!!!</h1>';
+	message = '<h1 class="alert alert-danger fade in res" role="alert">YOU GAVE UP.  The player was <a target="_blank" href="' + wikipediaize(player_name) + '"">' + player_name + '</a>!!!!</h1>';
 	$('#resMessage').html(message);
 	nextbtn = '<button id="next" class="btn btn-default"> NEXT </button>'
 	currentcontents=$('#input_stuff').html();
