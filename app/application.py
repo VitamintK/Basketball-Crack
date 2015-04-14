@@ -58,6 +58,12 @@ class Leaderboard():
         if len(self.leaderboard) != len(self.sorted_leaderboard):
             self.generate_sorted_leaderboard()
         return self.sorted_leaderboard
+    def get_highest_score(self, sid):
+        try:
+            return max((y[1] for y in self.leaderboard[sid]), key = lambda x: int(x))
+        except:
+            raise
+            return -1
     def __getitem__(self, thing):
         return self.leaderboard[thing]
 
@@ -242,12 +248,20 @@ def giveup():
 @app.route('/submit_score', methods=['GET'])
 def submit_score():
     user_score = request.args.get('score')
-    user_name = re.sub(r'\W+ ', ' ', request.args.get('name'))
+    try:
+        user_name = re.sub(r'\W+ ', ' ', request.args.get('name'))
+    except:
+        user_name = max(leaderboard[session['username']], key = lambda x: int(x[1]))[0]
     print(session['most_recent_nonzero_score'], user_score)
     if str(session['most_recent_nonzero_score']) == str(user_score):
         print('over here')
         leaderboard.add(user_name, user_score, session['username'])
     return "ah"
+
+@app.route('/get_user_max', methods=['GET'])
+def get_user_max():
+    u_sid = session['username']
+    return jsonify(score = leaderboard.get_highest_score(u_sid))
 
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard_():

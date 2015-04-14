@@ -6,6 +6,27 @@ var u_name;
 var submittedd = false;
 var prompt_submit = true;
 
+var choose_prompt = function(){
+	$.ajax({
+		url: "/get_user_max",
+		success: function(data){
+			if(data.score > -1){
+				$.ajax({
+					url: "/submit_score",
+					data: {
+						score: last_streak,
+						name:  u_name
+					}
+				});
+			} else{
+				if(last_streak > data.score){
+					setTimeout(prompt_submission, 400);
+				}
+			}
+		}
+	});
+}
+
 var prompt_submission = function(){
 	$('#score_placement').html(last_streak);
 	$('#myModal').modal('show');
@@ -88,7 +109,7 @@ var prep_buttons = function(){
 							streak = 0;
 							display_streak();
 							if(last_streak > 0){
-								setTimeout(prompt_submission, 400);
+								choose_prompt();
 							}
 						}
 						submittedd = false;
@@ -124,7 +145,7 @@ var prep_buttons = function(){
 				streak = 0;
 				display_streak();
 				if(last_streak > 0){
-					setTimeout(prompt_submission, 400);
+					choose_prompt();
 				}
 			}
 		});
