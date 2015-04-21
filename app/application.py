@@ -197,6 +197,9 @@ hashdict = generate_hashes()
 @app.route('/')
 def hello_world():
     #sid = _generate_sid
+
+    #MODE = 'one'
+
     try:
         if not session['username']:
             print(session['username'], ' is the session username')
@@ -214,6 +217,15 @@ def hello_world():
     table, player_name = pick_a_year()
     pnum = crc(player_name)
     return render_template("index.html", headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
+
+@app.route('/crack')
+def crack():
+
+    #MODE = 'all'
+
+    table, player_name = pick_all_years()
+    pnum = crc(player_name)
+    return render_template("index.html", headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum)
 
 @app.route('/submit', methods=['GET'])
 def submit():
@@ -253,9 +265,9 @@ def submit_score():
     except:
         user_name = max(leaderboard[session['username']], key = lambda x: int(x[1]))[0]
     print(session['most_recent_nonzero_score'], user_score)
-    if str(session['most_recent_nonzero_score']) == str(user_score):
-        print('over here')
-        leaderboard.add(user_name, user_score, session['username'])
+#    if int(session['most_recent_nonzero_score']) >= int(user_score):
+    print('over here')
+    leaderboard.add(user_name, session['most_recent_nonzero_score'], session['username'])
     return "ah"
 
 @app.route('/get_user_max', methods=['GET'])
@@ -266,12 +278,6 @@ def get_user_max():
 @app.route('/leaderboard', methods=['GET'])
 def leaderboard_():
     return render_template("headerstable.html", headers = ['Player', 'Streak'], table = leaderboard.cache_sorted_leaderboard())
-
-@app.route('/crack')
-def crack():
-    table, player_name = pick_all_years()
-    pnum = crc(player_name)
-    return render_template("index.html", headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum)
 
 @app.route('/nik')
 def nik():
