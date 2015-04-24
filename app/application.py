@@ -17,7 +17,7 @@ root_dir = '' #this is for pythonanywhere, where the root dir is
 
 json_dir = root_dir + 'json/'
 
-game_set = json_sets.easy
+game_set = json_sets.medium
 
 
 
