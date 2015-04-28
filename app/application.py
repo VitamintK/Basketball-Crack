@@ -67,6 +67,12 @@ class Leaderboard():
     def __getitem__(self, thing):
         return self.leaderboard[thing]
 
+class User():
+    def __init__(self):
+        pass
+        #self.score = 
+        #self.max_score = 
+    
 
 
 
@@ -222,10 +228,22 @@ def hello_world():
 def crack():
 
     #MODE = 'all'
-
+    ######
+    try:
+        if not session['username']:
+            print(session['username'], ' is the session username')
+            session['username'] = _generate_sid()
+    except:
+        print('NO SESSIONS USERNAME!  generating a new one')
+        session['username'] = _generate_sid()
+    try:
+        max_streak = session['max_streak']
+    except:
+        max_streak = 0
+    ####
     table, player_name = pick_all_years()
     pnum = crc(player_name)
-    return render_template("index.html", headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum)
+    return render_template("index.html", headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
 @app.route('/submit', methods=['GET'])
 def submit():
