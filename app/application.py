@@ -17,7 +17,7 @@ root_dir = '' #this is for pythonanywhere, where the root dir is
 
 json_dir = root_dir + 'json/'
 
-game_set = json_sets.medium
+default_game_set = json_sets.medium
 
 
 
@@ -88,7 +88,7 @@ def generate_hashes():
         json.dump(hashdict, hdict)
     return hashdict
 
-def pick_a_year():
+def pick_a_year(game_set = default_game_set):
     player = random.choice(game_set)
     player_name = player[:-5]
     with open('{}{}'.format(json_dir,player)) as pjson:
@@ -101,7 +101,7 @@ def pick_a_year():
             rows.append(row)
     return [random.choice(rows)], player_name
 
-def pick_all_years():
+def pick_all_years(game_set = default_game_set):
     player = random.choice(game_set)
     player_name = player[:-5]
     with open('{}{}'.format(json_dir,player)) as pjson:
@@ -115,7 +115,7 @@ def pick_all_years():
     rows = [[row[0]] + row[5:] for row in rows]
     return rows, player_name
 
-def pick_this_year():
+def pick_this_year(game_set = default_game_set):
     json_sets.this_year
 
 def crc(name):
@@ -198,6 +198,7 @@ def find_best_year(player, criteria):
     best_scoring_year = max(rows, key = lambda x: float_if_can(x[-1]))
     return best_scoring_year
 
+
 hashdict = generate_hashes()
 
 @app.route('/')
@@ -222,7 +223,7 @@ def hello_world():
     session['most_recent_nonzero_score'] = 0
     table, player_name = pick_a_year()
     pnum = crc(player_name)
-    return render_template("index.html", headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
+    return render_template("index.html", mode = 'one', headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
 @app.route('/crack')
 def crack():
@@ -243,24 +244,31 @@ def crack():
     ####
     table, player_name = pick_all_years()
     pnum = crc(player_name)
-    return render_template("index.html", headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
+    return render_template("index.html", mode = 'all', headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
 @app.route('/submit', methods=['GET'])
 def submit():
     player = request.args.get('player_name').strip();
     pnum = request.args.get('p_num');
+    mode = request.args.get('mode')
     print(player)
     #print(crc(player))
     #print(pnum)
     print(session['username'])
     print(session['score'])
     if crc(player) == int(pnum):
-        table, player_name = pick_a_year()
-        print(player_name)
         session['score'] += 1
         session['max_streak'] = session['score']
         session['most_recent_nonzero_score'] = session['score']
-        return jsonify(successCode = '1', pnum = crc(player_name), stats = render_template("table.html", headers = HEADERS, table=table))
+        if mode == 'all': #THERE NEEDS TO BE A GAME OBJECT FEATURING THE MODE, PLAYERNAME, data, PNUM, MAYBE HTML, OR AT LEAST A METHOD TO CREATE HTML.
+                #where the init constructor can take in only the mode, and makes everything.  super niceeeeeee
+            table, player_name = pick_all_years()
+            print(player_name)
+            return jsonify(successCode = '1', pnum = crc(player_name), stats = render_template("table.html", headers = [HEADERS[0]] + HEADERS[5:], table=table))
+        else:
+            table, player_name = pick_a_year()
+            print(player_name)
+            return jsonify(successCode = '1', pnum = crc(player_name), stats = render_template("table.html", headers = HEADERS, table=table))
     else:
         session['most_recent_nonzero_score'] = session['score']
         session['score'] = 0
@@ -271,9 +279,15 @@ def giveup():
     session['most_recent_nonzero_score'] = session['score']
     session['score'] = 0
     pnum = request.args.get('p_num')
+    mode = request.args.get('mode')
     old_player_name = hashdict[pnum]
-    table, player_name = pick_a_year()
-    return jsonify(pnum = crc(player_name), player_name = old_player_name, stats = render_template("table.html", headers = HEADERS, table=table))
+    if mode == 'all':
+        table, player_name = pick_all_years()
+        theaders = [HEADERS[0]] + HEADERS[5:]
+    else:
+        table, player_name = pick_a_year()
+        theaders = HEADERS
+    return jsonify(pnum = crc(player_name), player_name = old_player_name, stats = render_template("table.html", headers = theaders, table=table))
 
 @app.route('/submit_score', methods=['GET'])
 def submit_score():

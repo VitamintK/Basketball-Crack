@@ -70,6 +70,7 @@ var display_loss = function(player_name, stats){
 		replace_table(stats);
 		prep_buttons();
 		$("#player").focus();
+		autoClose('.res', 3000);
 	})
 }
 
@@ -91,7 +92,8 @@ var prep_buttons = function(){
 					url: "/submit",
 					data: {
 						player_name: player,
-						p_num: pnum
+						p_num: pnum,
+						mode: mode
 					},
 					success: function(data){
 						submittedd = false;
@@ -136,7 +138,8 @@ var prep_buttons = function(){
 		$.ajax({
 			url: "/giveup",
 			data: {
-				p_num: pnum
+				p_num: pnum,
+				mode: mode
 			},
 			success: function(data){
 				pnum = data.pnum;
@@ -174,8 +177,8 @@ $(document).ready(function(){
 		//alert('i was clicked');
 		u_name = $('#user_name').val();
 		if(/[^a-zA-Z0-9 _]/.test(u_name)){
-			$('#helpblock').html('Please enter a name with only letters, numbers, and underscores.')
-			$('#submit_form').addClass('has-error')
+			$('#helpblock').html('Please enter a name with only letters, numbers, and underscores.');
+			$('#submit_form').addClass('has-error');
 		} else {
 			$('#submit_form').removeClass('has-error');
 			//alert('test passed');
