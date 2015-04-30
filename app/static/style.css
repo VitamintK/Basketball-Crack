@@ -5,14 +5,16 @@ body{
 #score{
 	float:left;
 	margin:auto;
-	position:fixed;
-	left:2.3em;
+	margin-left: 2.3em;
+	/*position:fixed;*/
+	/*left:2.3em;*/
 }
 #maxscore{
 	float:right;
 	margin:auto;
-	position:fixed;
-	right:2.3em;
+	margin-right: 2.3em;
+	/*position:fixed;*/
+	/*right:2.3em;*/
 }
 #container{
 	font-size: 1.2em;
