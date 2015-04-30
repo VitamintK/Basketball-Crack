@@ -19,8 +19,6 @@ json_dir = root_dir + 'json/'
 
 default_game_set = json_sets.medium
 
-
-
 app = Flask(__name__)
 
 HEADERS = ["Season", "Age", "Tm", "Lg", "Pos", "G", "GS", "MP", "FG", "FGA", "FG%", "3P", "3PA", "3P%", "2P", "2PA", "2P%", "FT", "FTA", "FT%", "ORB", "DRB", "TRB", "AST", "STL", "BLK", "TOV", "PF", "PTS"]
@@ -75,6 +73,7 @@ class User():
 
 #THERE NEEDS TO BE A GAME OBJECT FEATURING THE MODE, PLAYERNAME, data, PNUM, MAYBE HTML, OR AT LEAST A METHOD TO CREATE HTML.
                 #where the init constructor can take in only the mode, and makes everything.  super niceeeeeee
+    #collect median time to solution.
 class Game():
     pass
 
@@ -233,7 +232,7 @@ def hello_world():
     pnum = crc(player_name)
     return render_template("index.html", mode = 'one', headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
-@app.route('/crack')
+@app.route('/all/')
 def crack():
 
     #MODE = 'all'
@@ -254,7 +253,7 @@ def crack():
     pnum = crc(player_name)
     return render_template("index.html", mode = 'all', headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
-@app.route('/crack/<playernum>')
+@app.route('/all/<playernum>')
 def crack_with_name(playernum=None):
     try:
         if not session['username']:

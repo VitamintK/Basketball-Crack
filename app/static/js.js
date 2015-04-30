@@ -6,6 +6,10 @@ var u_name;
 var submittedd = false;
 var prompt_submit = true;
 
+var make_self_url = function(modes){
+	return window.location.host + '/' + modes.join('/') + '/' + pnum 
+}
+
 var choose_prompt = function(){
 	$.ajax({
 		url: "/get_user_max",
@@ -76,6 +80,9 @@ var display_loss = function(player_name, stats){
 
 var replace_table = function(newtable){
 	$('#stattable').html(newtable);
+	/* this doesn't fit in with the name of the function and should either be in an encapsulating/dif function or change name of function*/
+	$("#linker").val(make_self_url([mode]));
+	/* ^^^^ */
 }
 
 var prep_buttons = function(){
@@ -211,6 +218,8 @@ $(document).ready(function(){
 			return false;
 		}
 	});
+	$('#linker').focus(function() { $(this).select();});
+	$("#linker").val(make_self_url([mode]));
 	prep_buttons();
 
 });
