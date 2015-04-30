@@ -72,7 +72,11 @@ class User():
         pass
         #self.score = 
         #self.max_score = 
-    
+
+#THERE NEEDS TO BE A GAME OBJECT FEATURING THE MODE, PLAYERNAME, data, PNUM, MAYBE HTML, OR AT LEAST A METHOD TO CREATE HTML.
+                #where the init constructor can take in only the mode, and makes everything.  super niceeeeeee
+class Game():
+    pass
 
 
 
@@ -88,8 +92,9 @@ def generate_hashes():
         json.dump(hashdict, hdict)
     return hashdict
 
-def pick_a_year(game_set = default_game_set):
-    player = random.choice(game_set)
+def pick_a_year(game_set = default_game_set, player = None):
+    if not player:
+        player = random.choice(game_set)
     player_name = player[:-5]
     with open('{}{}'.format(json_dir,player)) as pjson:
         player_json = json.load(pjson)
@@ -101,8 +106,11 @@ def pick_a_year(game_set = default_game_set):
             rows.append(row)
     return [random.choice(rows)], player_name
 
-def pick_all_years(game_set = default_game_set):
-    player = random.choice(game_set)
+def pick_all_years(game_set = default_game_set, player = None):
+    if not player:
+        player = random.choice(game_set)
+    else:
+        player = player + '.json'
     player_name = player[:-5]
     with open('{}{}'.format(json_dir,player)) as pjson:
         player_json = json.load(pjson)
@@ -246,6 +254,25 @@ def crack():
     pnum = crc(player_name)
     return render_template("index.html", mode = 'all', headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
+@app.route('/crack/<playernum>')
+def crack_with_name(playernum=None):
+    try:
+        if not session['username']:
+            print(session['username'], ' is the session username')
+            session['username'] = _generate_sid()
+    except:
+        print('NO SESSIONS USERNAME!  generating a new one')
+        session['username'] = _generate_sid()
+    try:
+        max_streak = session['max_streak']
+    except:
+        max_streak = 0
+    ####
+    table, player_name = pick_all_years(player = hashdict[playernum])
+    pnum = crc(player_name)
+    return render_template("index.html", mode = 'all', headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
+
+
 @app.route('/submit', methods=['GET'])
 def submit():
     player = request.args.get('player_name').strip();
@@ -260,8 +287,7 @@ def submit():
         session['score'] += 1
         session['max_streak'] = session['score']
         session['most_recent_nonzero_score'] = session['score']
-        if mode == 'all': #THERE NEEDS TO BE A GAME OBJECT FEATURING THE MODE, PLAYERNAME, data, PNUM, MAYBE HTML, OR AT LEAST A METHOD TO CREATE HTML.
-                #where the init constructor can take in only the mode, and makes everything.  super niceeeeeee
+        if mode == 'all': 
             table, player_name = pick_all_years()
             print(player_name)
             return jsonify(successCode = '1', pnum = crc(player_name), stats = render_template("table.html", headers = [HEADERS[0]] + HEADERS[5:], table=table))
