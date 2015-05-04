@@ -9,11 +9,9 @@ import re
 from collections import defaultdict
 from datetime import date
 from uuid import uuid4
+from config import root_dir
 
 import json_sets
-
-root_dir = '' #this is for pythonanywhere, where the root dir is
-#root_dir = 'Basketball-Crack/app/'
 
 json_dir = root_dir + 'json/'
 

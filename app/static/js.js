@@ -80,11 +80,26 @@ var display_loss = function(player_name, stats){
 
 var replace_table = function(newtable){
 	$('#stattable').html(newtable);
+	$('#container').scrollTop = 0;
 	/* this doesn't fit in with the name of the function and should either be in an encapsulating/dif function or change name of function*/
 	$("#linker").val(make_self_url([mode]));
 	/* ^^^^ */
 }
 
+/*var get_color = function(percentile){
+	if(percentile > 0.5){
+		return rgb(0,255*((percentile - 0.5)/0.5),0);
+	}
+	else if(percentile == 0.5){
+		return rgb(0,0,0);
+	}
+	else{
+		return rgb(255*((0.5 - percentile)/0.5),0,0);
+	}
+}
+on second thought, it doesn't actually make much sense to do this on the frontend.
+Note to self: delete this codeblock if you implement this on the backend.
+*/
 var prep_buttons = function(){
 	$('#go_btn').click(function(){
 		//console.log('button press!' + $('#player').val());
