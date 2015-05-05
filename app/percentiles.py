@@ -41,12 +41,17 @@ def generate_percentiles(step = 0.05, stat_dict=generate_stat_dicts()):
 def get_percentile(my_num, stat_cat, percentiles = generate_percentiles()):
     percentile = 0
     for i in percentiles[stat_cat]:
-        if my_num < i[1]:
-            return percentile
-        percentile = i[0]
+        try:
+            if float(my_num) < i[1]:
+                return percentile
+            percentile = i[0]
+        except ValueError:
+            return None
     return 1
 
 def make_color(percentile):
+    if percentile == None:
+        return "inherit"
     if percentile > 0.5:
         return "rgb(0,{},0)".format(math.floor(255*((percentile - 0.5)/0.5)))
     elif percentile == 0.5:
@@ -54,4 +59,13 @@ def make_color(percentile):
     else:
         return "rgb({},0,0)".format(math.floor(255*((0.5 - percentile)/0.5)))
 
-print(make_color(get_percentile(15, 'PTS')))
+def percentalize(statline):
+    percentalized = []
+    headers = statline[0]
+    stats = statline[1:]
+    for row in stats:
+        p_row = []
+        for index, stat in enumerate(row):
+            p_row.append((make_color(get_percentile(stat, headers[index])), stat))
+        percentalized.append(p_row)
+    return percentalized

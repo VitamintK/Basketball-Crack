@@ -7,7 +7,7 @@
 			{% for t in table %}
 			    <tr>
 			    {% for i in t %}
-			        <td>{{ i }}</td>
+			        <td style="background-color:{{i[0]}}">{{ i[1] }}</td>
 			    {% endfor %}
 			    </tr>
 			{% endfor %}

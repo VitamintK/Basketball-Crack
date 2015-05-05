@@ -9,9 +9,10 @@ import re
 from collections import defaultdict
 from datetime import date
 from uuid import uuid4
-from config import root_dir
 
+from config import root_dir
 import json_sets
+import percentiles
 
 json_dir = root_dir + 'json/'
 
@@ -227,6 +228,9 @@ def hello_world():
     session['score'] = 0
     session['most_recent_nonzero_score'] = 0
     table, player_name = pick_a_year()
+    print(HEADERS + table)
+    table = percentiles.percentalize([HEADERS] + table)
+    print(table)
     pnum = crc(player_name)
     return render_template("index.html", mode = 'one', headers = HEADERS, table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
