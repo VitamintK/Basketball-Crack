@@ -61,3 +61,7 @@ overflow-x: hidden;
 #score_placement{
 	font-weight: bold;
 }
+
+.no_color{
+	background-color: inherit;
+}

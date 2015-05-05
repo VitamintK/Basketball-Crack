@@ -252,6 +252,7 @@ def crack():
         max_streak = 0
     ####
     table, player_name = pick_all_years()
+    table = percentiles.percentalize([[HEADERS[0]] + HEADERS[5:]] + table)
     pnum = crc(player_name)
     return render_template("index.html", mode = 'all', headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
@@ -290,10 +291,12 @@ def submit():
         session['most_recent_nonzero_score'] = session['score']
         if mode == 'all': 
             table, player_name = pick_all_years()
+            table = percentiles.percentalize([[HEADERS[0]] + HEADERS[5:]] + table)
             print(player_name)
             return jsonify(successCode = '1', pnum = crc(player_name), stats = render_template("table.html", headers = [HEADERS[0]] + HEADERS[5:], table=table))
         else:
             table, player_name = pick_a_year()
+            table = percentiles.percentalize([HEADERS] + table)
             print(player_name)
             return jsonify(successCode = '1', pnum = crc(player_name), stats = render_template("table.html", headers = HEADERS, table=table))
     else:
@@ -314,6 +317,7 @@ def giveup():
     else:
         table, player_name = pick_a_year()
         theaders = HEADERS
+    table = percentiles.percentalize([theaders] + table)
     return jsonify(pnum = crc(player_name), player_name = old_player_name, stats = render_template("table.html", headers = theaders, table=table))
 
 @app.route('/submit_score', methods=['GET'])

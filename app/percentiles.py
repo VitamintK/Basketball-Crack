@@ -28,7 +28,7 @@ def generate_stat_dicts(dataset = default_game_set):
                     #statint = stat
     return {stat:sorted(stats) for stat, stats in stat_sets.items()}
 
-def generate_percentiles(step = 0.05, stat_dict=generate_stat_dicts()):
+def generate_percentiles(step = 0.025, stat_dict=generate_stat_dicts()):
     assert step <= 1
     stat_percentiles = defaultdict(list)
     for stat, stats in stat_dict.items():
@@ -40,9 +40,11 @@ def generate_percentiles(step = 0.05, stat_dict=generate_stat_dicts()):
 
 def get_percentile(my_num, stat_cat, percentiles = generate_percentiles()):
     percentile = 0
+    if stat_cat not in percentiles:
+        return None
     for i in percentiles[stat_cat]:
         try:
-            if float(my_num) < i[1]:
+            if float(my_num) <= i[1]:
                 return percentile
             percentile = i[0]
         except ValueError:
@@ -50,14 +52,19 @@ def get_percentile(my_num, stat_cat, percentiles = generate_percentiles()):
     return 1
 
 def make_color(percentile):
+    assert not percentile or percentile <=1
     if percentile == None:
         return "inherit"
-    if percentile > 0.5:
-        return "rgb(0,{},0)".format(math.floor(255*((percentile - 0.5)/0.5)))
-    elif percentile == 0.5:
-        return "rgb(0,0,0)"
-    else:
-        return "rgb({},0,0)".format(math.floor(255*((0.5 - percentile)/0.5)))
+    #if percentile > 0.5:
+    #    color = 255-math.floor(255*((percentile - 0.5)/0.5))
+    #    return "rgb({},255,{})".format(color, color)
+    #elif percentile == 0.5:
+    #    return "rgb(255,255,255)"
+    #else:
+    #    color = 255-math.floor(255*((0.5 - percentile)/0.5))
+    #    return "rgb(255,{},{})".format(color, color)
+    color = 255-math.floor(255*percentile*percentile)
+    return "rgb({},255,{})".format(color, color)
 
 def percentalize(statline):
     percentalized = []
