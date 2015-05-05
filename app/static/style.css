@@ -62,6 +62,6 @@ overflow-x: hidden;
 	font-weight: bold;
 }
 
-.no_color{
-	background-color: inherit;
+.no_color td{
+	background-color: inherit !important;
 }

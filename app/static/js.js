@@ -233,6 +233,13 @@ $(document).ready(function(){
 			return false;
 		}
 	});
+
+	$(function() {
+		$('#color-toggle').change(function() {
+	    	$('#stattable').toggleClass("no_color");
+		})
+	})
+
 	$('#linker').focus(function() { $(this).select();});
 	$("#linker").val(make_self_url([mode]));
 	prep_buttons();

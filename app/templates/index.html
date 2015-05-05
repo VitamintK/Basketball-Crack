@@ -10,6 +10,9 @@
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<link href="{{url_for('static', filename='bootstrap-toggle.min.css')}}" rel="stylesheet">
+	<script src="{{url_for('static', filename='bootstrap-toggle.min.js')}}"></script>
+
 	<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
 	<script> var pnum = {{pnum}};
@@ -22,7 +25,7 @@
 	<div class="alert alert-success" id="score"><h2>STREAK: <span id="streak">0</span></h2></div>
 	<div class="alert alert-success" id="maxscore"><h2>HIGHEST STREAK: <span id="maxstreak">{{max_streak}}</span></h2></div>
 	<h1>NAME THAT NBA PLAYER</h1>
-
+	<input id="color-toggle" data-toggle="toggle" type="checkbox" data-on="Colors are on" data-off="Colors are off">
 <!-- Button trigger modal -->
 	<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#leaderboard" id="leaderboard_btn">
 	  Leaderboard
