@@ -271,6 +271,7 @@ def crack_with_name(playernum=None):
         max_streak = 0
     ####
     table, player_name = pick_all_years(player = hashdict[playernum])
+    table = percentiles.percentalize([[HEADERS[0]] + HEADERS[5:]] + table)
     pnum = crc(player_name)
     return render_template("index.html", mode = 'all', headers = [HEADERS[0]] + HEADERS[5:], table=table, pnum=pnum, names=[player[:-5] for player in players], max_streak = max_streak)
 
