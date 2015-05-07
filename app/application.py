@@ -51,19 +51,18 @@ class Leaderboard():
         with open(self.lb_file,'wb') as lb_file:
             pickle.dump(self.leaderboard, lb_file)
     def generate_sorted_leaderboard(self):
-        self.sorted_leaderboard = sorted([max(value, key=lambda x: int(x[1])) for _,value in self.leaderboard.items()], key=lambda x: int(x[1]), reverse=True)
+        self.sorted_leaderboard = sorted([max(value, key=lambda x: int(x[1])) for _,value in self.leaderboard.items() if value], key=lambda x: int(x[1]), reverse=True)
     def cache_sorted_leaderboard(self):
         if len(self.leaderboard) != len(self.sorted_leaderboard):
             self.generate_sorted_leaderboard()
         return self.sorted_leaderboard
     def get_highest_score(self, sid):
         try:
-            #if sid in self.leaderboard:
-            return max((y[1] for y in self.leaderboard[sid]), key = lambda x: int(x))
-            #else:
-            #    assert False
+            if sid in self.leaderboard:
+                return max((y[1] for y in self.leaderboard[sid]), key = lambda x: int(x))
+            else:
+                raise
         except:
-            #raise
             return -1
     def __getitem__(self, thing):
         return self.leaderboard[thing]
