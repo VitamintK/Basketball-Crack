@@ -35,6 +35,7 @@ class Leaderboard():
         try:
             with open(self.lb_file,'rb') as lb_file:
                 self.leaderboard = pickle.load(lb_file)
+            print(self.leaderboard)
         except:
             #lb_file = open(leaderboard_file, 'wb')
             #self.lb_file = lb_file
@@ -57,9 +58,12 @@ class Leaderboard():
         return self.sorted_leaderboard
     def get_highest_score(self, sid):
         try:
+            #if sid in self.leaderboard:
             return max((y[1] for y in self.leaderboard[sid]), key = lambda x: int(x))
+            #else:
+            #    assert False
         except:
-            raise
+            #raise
             return -1
     def __getitem__(self, thing):
         return self.leaderboard[thing]
@@ -236,7 +240,7 @@ def hello_world():
 
 @app.route('/all/')
 def crack():
-
+    print(leaderboard.leaderboard)
     #MODE = 'all'
     ######
     try:
@@ -258,6 +262,7 @@ def crack():
 
 @app.route('/all/<playernum>')
 def crack_with_name(playernum=None):
+    print(playernum, hashdict[playernum])
     try:
         if not session['username']:
             print(session['username'], ' is the session username')

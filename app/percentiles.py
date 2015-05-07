@@ -51,20 +51,22 @@ def get_percentile(my_num, stat_cat, percentiles = generate_percentiles()):
             return None
     return 1
 
-def make_color(percentile):
+def make_color(percentile, mode="white_to_green"):
     assert not percentile or percentile <=1
     if percentile == None:
         return "inherit"
-    #if percentile > 0.5:
-    #    color = 255-math.floor(255*((percentile - 0.5)/0.5))
-    #    return "rgb({},255,{})".format(color, color)
-    #elif percentile == 0.5:
-    #    return "rgb(255,255,255)"
-    #else:
-    #    color = 255-math.floor(255*((0.5 - percentile)/0.5))
-    #    return "rgb(255,{},{})".format(color, color)
-    color = 255-math.floor(255*percentile*percentile)
-    return "rgb({},255,{})".format(color, color)
+    if mode == "red_to_green":
+        if percentile > 0.5:
+            color = 255-math.floor(255*((percentile - 0.5)/0.5))
+            return "rgb({},255,{})".format(color, color)
+        elif percentile == 0.5:
+            return "rgb(255,255,255)"
+        else:
+            color = 255-math.floor(255*((0.5 - percentile)/0.5))
+            return "rgb(255,{},{})".format(color, color)
+    elif mode == "white_to_green":
+        color = 255-math.floor(255*percentile*percentile)
+        return "rgb({},255,{})".format(color, color)
 
 def percentalize(statline):
     percentalized = []
@@ -73,6 +75,6 @@ def percentalize(statline):
     for row in stats:
         p_row = []
         for index, stat in enumerate(row):
-            p_row.append((make_color(get_percentile(stat, headers[index])), stat))
+            p_row.append((make_color(get_percentile(stat, headers[index]), 'white_to_green'), stat))
         percentalized.append(p_row)
     return percentalized
